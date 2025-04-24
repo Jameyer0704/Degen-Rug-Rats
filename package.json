@@ -58,13 +58,8 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
-    "ws": "latest",
-    "graphql": "latest",
-    "uWebSockets.js": "latest",
-    "@fastify/websocket": "latest",
     "@ai-sdk/groq": "latest",
-    "ai": "latest",
-    "graphql-ws": "latest"
+    "ai": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

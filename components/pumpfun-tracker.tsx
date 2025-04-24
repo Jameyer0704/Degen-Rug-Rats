@@ -25,8 +25,7 @@ const PumpFunTracker = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
-  const wsRef = useRef<WebSocket | null>(null)
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
   // Mock data for initial display
   const mockTrades: Trade[] = [
@@ -65,12 +64,8 @@ const PumpFunTracker = () => {
     // For now, we'll simulate incoming data with a timer
 
     // Clear any existing connection
-    if (wsRef.current) {
-      wsRef.current.close()
-    }
-
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current)
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
     }
 
     // Simulate WebSocket connection with periodic updates
@@ -103,26 +98,21 @@ const PumpFunTracker = () => {
         15000 + Math.random() * 15000,
       ) // Random interval between 15-30 seconds
 
+      intervalRef.current = interval
       return interval
     }
 
-    const interval = simulateConnection()
-
-    // Store cleanup function
-    return () => {
-      clearInterval(interval)
-    }
+    simulateConnection()
   }
 
   // Connect to WebSocket on component mount
   useEffect(() => {
-    const cleanup = connectWebSocket()
+    connectWebSocket()
 
     // Cleanup on unmount
     return () => {
-      if (cleanup) cleanup()
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current)
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
       }
     }
   }, [])
