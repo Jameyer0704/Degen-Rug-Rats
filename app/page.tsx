@@ -245,7 +245,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                 <div className="p-4 w-full">
                   <h3 className="text-white font-orbitron text-lg">Crypto Rat Crew</h3>
-                  <p className="text-gray-300 text-sm">Standard Edition</p>
+                  <p className="text-gray-300 text-sm">1:1 Special Edition</p>
                 </div>
               </div>
             </div>
@@ -262,7 +262,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                 <div className="p-4 w-full">
                   <h3 className="text-white font-orbitron text-lg">Street Rats Squad</h3>
-                  <p className="text-gray-300 text-sm">Standard Edition</p>
+                  <p className="text-gray-300 text-sm">1:1 Special Edition</p>
                 </div>
               </div>
             </div>
@@ -279,7 +279,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                 <div className="p-4 w-full">
                   <h3 className="text-white font-orbitron text-lg">Neon Rat Gang</h3>
-                  <p className="text-gray-300 text-sm">Special 1:1 Edition</p>
+                  <p className="text-gray-300 text-sm">1:1 Special Edition</p>
                 </div>
               </div>
             </div>

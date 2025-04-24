@@ -38,6 +38,7 @@ export async function getNFTs(): Promise<NFT[]> {
         marketplace: "Magic Eden",
         marketplaceUrl: "https://magiceden.us/marketplace/DyzxDC6MerqLajQQqq3fMnMhLv6MQe8JFQ1gZL8TvRTP",
         floorPrice: 0.42,
+        isOneOfOne: true,
       },
       {
         id: "2",
@@ -48,6 +49,7 @@ export async function getNFTs(): Promise<NFT[]> {
         marketplace: "Tensor",
         marketplaceUrl: "https://www.tensor.trade/trade/92078f42-23da-43e4-9fc6-74e9abb2c821",
         floorPrice: 0.42,
+        isOneOfOne: true,
       },
       {
         id: "3",
@@ -69,6 +71,7 @@ export async function getNFTs(): Promise<NFT[]> {
         marketplace: "Magic Eden",
         marketplaceUrl: "https://magiceden.us/marketplace/DyzxDC6MerqLajQQqq3fMnMhLv6MQe8JFQ1gZL8TvRTP",
         floorPrice: 0.42,
+        isOneOfOne: true,
       },
       {
         id: "5",
@@ -79,6 +82,7 @@ export async function getNFTs(): Promise<NFT[]> {
         marketplace: "Tensor",
         marketplaceUrl: "https://www.tensor.trade/trade/92078f42-23da-43e4-9fc6-74e9abb2c821",
         floorPrice: 0.42,
+        isOneOfOne: true,
       },
       {
         id: "6",
