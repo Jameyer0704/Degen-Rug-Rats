@@ -20,7 +20,7 @@ const BUY_TOKEN_URL = `https://jup.ag/swap/SOL-${TOKEN_CONTRACT}`
 const PUMPFUN_URL = `https://pump.fun/coin/${TOKEN_CONTRACT}`
 const DISCORD_URL = "https://discord.gg/TnHKnJKP5w"
 
-// Define image paths as constants to avoid empty strings
+// Define image paths as constants
 const SEWER_BG_IMAGE = "/images/sewer-bg.png"
 const SEWER_TUNNEL_IMAGE = "/images/sewer-tunnel.jpg"
 const DEGEN_LOGO_IMAGE = "/images/degen-logo.png"
@@ -102,18 +102,29 @@ export default function Home() {
         className="pt-24 pb-20 relative bg-black min-h-screen flex items-center"
       >
         <div className="absolute inset-0 opacity-20 z-0">
-          <Image src={SEWER_BG_IMAGE || "/placeholder.svg"} alt="Sewer Background" fill className="object-cover" />
+          <Image
+            src="/images/sewer-bg.png"
+            alt="Sewer Background"
+            fill
+            className="object-cover"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.svg"
+            }}
+          />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="mb-6">
                 <Image
-                  src={DEGEN_LOGO_IMAGE || "/placeholder.svg"}
+                  src="/images/degen-logo.png"
                   alt="Degen Rug-Rats"
                   width={400}
                   height={150}
                   className="object-contain"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg"
+                  }}
                 />
               </div>
               <h2 className="text-3xl md:text-4xl font-orbitron font-bold mb-6">
@@ -169,7 +180,15 @@ export default function Home() {
             </div>
 
             <div className="relative aspect-square rounded-lg overflow-hidden shadow-[0_0_30px_rgba(255,87,87,0.3)]">
-              <Image src={RAT_KING_IMAGE || "/placeholder.svg"} alt="$DEGEN Token" fill className="object-cover" />
+              <Image
+                src="/images/evil-rat-king.png"
+                alt="$DEGEN Token"
+                fill
+                className="object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.svg"
+                }}
+              />
             </div>
           </div>
         </div>
@@ -196,7 +215,15 @@ export default function Home() {
       <section id="nfts" ref={nftSectionRef} className="py-20 relative bg-black/80">
         {/* Different sewer background for NFT section */}
         <div className="absolute inset-0 opacity-20 z-0">
-          <Image src={SEWER_TUNNEL_IMAGE || "/placeholder.svg"} alt="Sewer Tunnel" fill className="object-cover" />
+          <Image
+            src="/images/sewer-tunnel.jpg"
+            alt="Sewer Tunnel"
+            fill
+            className="object-cover"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.svg"
+            }}
+          />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
@@ -290,10 +317,13 @@ export default function Home() {
         <div className="absolute inset-0 opacity-25 z-0 overflow-hidden">
           <div className="absolute inset-0 rotate-180">
             <Image
-              src={SEWER_BG_IMAGE || "/placeholder.svg"}
+              src="/images/sewer-bg.png"
               alt="Sewer Background"
               fill
               className="object-cover object-bottom"
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.svg"
+              }}
             />
           </div>
         </div>
@@ -577,6 +607,171 @@ export default function Home() {
               </div>
             </TabsContent>
           </Tabs>
+        </div>
+      </section>
+
+      {/* Roadmap Section */}
+      <section id="roadmap" ref={roadmapSectionRef} className="py-20 relative bg-black/90">
+        <div className="absolute inset-0 opacity-15 z-0">
+          <Image
+            src="/images/sewer-bg.png"
+            alt="Sewer Background"
+            fill
+            className="object-cover"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.svg"
+            }}
+          />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-orbitron font-bold mb-4">
+              Project <span className="text-rat-primary">Roadmap</span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Our journey from the sewers to the moon - follow our development roadmap
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Phase 1 */}
+            <Card className="sewer-card border-gray-800 overflow-hidden">
+              <CardContent className="p-0">
+                <div className="bg-rat-primary/10 p-4 border-b border-gray-800">
+                  <h3 className="font-orbitron font-bold text-rat-primary flex items-center">
+                    <Badge className="bg-green-500 text-white border-none mr-2">Completed</Badge>
+                    Phase 1: Foundation
+                  </h3>
+                </div>
+                <div className="p-6 space-y-4">
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <div className="bg-green-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-300">Token launch on Solana</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-green-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-300">Website development</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-green-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-300">Community building</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-green-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-300">Social media presence</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-green-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-300">Initial marketing campaign</span>
+                    </li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Phase 2 */}
+            <Card className="sewer-card border-gray-800 overflow-hidden">
+              <CardContent className="p-0">
+                <div className="bg-rat-primary/10 p-4 border-b border-gray-800">
+                  <h3 className="font-orbitron font-bold text-rat-primary flex items-center">
+                    <Badge className="bg-yellow-500 text-black border-none mr-2">In Progress</Badge>
+                    Phase 2: Expansion
+                  </h3>
+                </div>
+                <div className="p-6 space-y-4">
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <div className="bg-yellow-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-300">NFT collection launch (69 standard + 20 special)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-yellow-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-300">AI trading tools development</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-yellow-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-300">Staking platform</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-gray-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-400">Strategic partnerships</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-gray-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-400">Exchange listings</span>
+                    </li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Phase 3 */}
+            <Card className="sewer-card border-gray-800 overflow-hidden">
+              <CardContent className="p-0">
+                <div className="bg-rat-primary/10 p-4 border-b border-gray-800">
+                  <h3 className="font-orbitron font-bold text-rat-primary flex items-center">
+                    <Badge className="bg-gray-500 text-white border-none mr-2">Upcoming</Badge>
+                    Phase 3: Domination
+                  </h3>
+                </div>
+                <div className="p-6 space-y-4">
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <div className="bg-gray-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-400">Metaverse integration</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-gray-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-400">DEX launch</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-gray-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-400">Cross-chain expansion</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-gray-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-400">DAO governance implementation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="bg-gray-500/20 p-1 rounded-full mt-0.5">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      </div>
+                      <span className="text-gray-400">Global marketing campaign</span>
+                    </li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
     </div>

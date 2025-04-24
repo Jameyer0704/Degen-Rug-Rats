@@ -28,18 +28,50 @@ export default function MintPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div>
             <div className="relative aspect-square rounded-lg overflow-hidden mb-6">
-              <Image src="/images/hero-rats.png" alt="Degen Rug-Rats NFT Collection" fill className="object-cover" />
+              <Image
+                src="/images/hero-rats.png"
+                alt="Degen Rug-Rats NFT Collection"
+                fill
+                className="object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.svg"
+                }}
+              />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div className="relative aspect-square rounded-lg overflow-hidden">
-                <Image src="/images/street-rats-1.png" alt="NFT Preview 1" fill className="object-cover" />
+                <Image
+                  src="/images/street-rats-1.png"
+                  alt="NFT Preview 1"
+                  fill
+                  className="object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg"
+                  }}
+                />
               </div>
               <div className="relative aspect-square rounded-lg overflow-hidden">
-                <Image src="/images/crypto-rats.png" alt="NFT Preview 2" fill className="object-cover" />
+                <Image
+                  src="/images/crypto-rats.png"
+                  alt="NFT Preview 2"
+                  fill
+                  className="object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg"
+                  }}
+                />
               </div>
               <div className="relative aspect-square rounded-lg overflow-hidden">
-                <Image src="/images/chain-rat.png" alt="NFT Preview 3" fill className="object-cover" />
+                <Image
+                  src="/images/chain-rat.png"
+                  alt="NFT Preview 3"
+                  fill
+                  className="object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg"
+                  }}
+                />
               </div>
             </div>
           </div>

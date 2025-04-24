@@ -28,7 +28,7 @@ export async function getNFTs(): Promise<NFT[]> {
 
   try {
     // Real NFT data from the provided sources
-    return [
+    const nfts = [
       {
         id: "1",
         name: "Degen Rug-Rat #42",
@@ -96,6 +96,13 @@ export async function getNFTs(): Promise<NFT[]> {
         floorPrice: 0.42,
       },
     ]
+
+    // Ensure no NFT has an empty image URL
+    return nfts.map((nft) => ({
+      ...nft,
+      // If image is empty or undefined, provide a fallback
+      image: nft.image || "/placeholder.svg",
+    }))
   } catch (error) {
     console.error("Error fetching NFT data:", error)
     return []

@@ -69,12 +69,17 @@ const NftGallery = () => {
         {items.map((nft) => (
           <Card key={nft.id} className="sewer-card border-gray-800 overflow-hidden group">
             <div className="relative aspect-square overflow-hidden">
-              <Image
-                src={nft.image || "/placeholder.svg"}
-                alt={nft.name}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-              />
+              {nft.image && (
+                <Image
+                  src={nft.image || "/placeholder.svg"}
+                  alt={nft.name}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg"
+                  }}
+                />
+              )}
               <div className="absolute top-2 right-2">
                 <Badge className="bg-rat-primary text-white border-none">{nft.price} SOL</Badge>
               </div>

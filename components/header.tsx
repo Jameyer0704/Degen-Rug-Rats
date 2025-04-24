@@ -71,7 +71,15 @@ const Header = () => {
       <div className="container mx-auto px-4 flex justify-between items-center">
         <a href="#token" className="flex items-center gap-2">
           <div className="h-10 w-40 relative">
-            <Image src="/images/degen-logo.png" alt="Degen Rug-Rats" fill className="object-contain" />
+            <Image
+              src="/images/degen-logo.png"
+              alt="Degen Rug-Rats"
+              fill
+              className="object-contain"
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.svg"
+              }}
+            />
           </div>
         </a>
 

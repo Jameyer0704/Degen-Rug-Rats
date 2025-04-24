@@ -405,7 +405,16 @@ const AIChat = ({ isWidget = false, className = "", tokenData }: AIChatProps) =>
       <div className="p-3 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-rat-primary/20">
-            <Image src="/images/evil-rat-king.png" alt="SewerKing" width={32} height={32} className="object-cover" />
+            <Image
+              src="/images/evil-rat-king.png"
+              alt="SewerKing"
+              width={32}
+              height={32}
+              className="object-cover"
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.svg"
+              }}
+            />
           </div>
           <div>
             <h3 className="font-bold text-white">SewerKing</h3>
