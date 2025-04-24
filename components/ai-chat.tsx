@@ -1,24 +1,19 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Send, RefreshCw } from "lucide-react"
-
-interface ChatMessage {
-  role: "user" | "assistant"
-  content: string
-  id?: string
-}
+import { Send, RefreshCw, Download, Clock } from "lucide-react"
+import { formatDistanceToNow } from "date-fns"
+import { useChat } from "@/contexts/chat-context"
 
 interface AIChatProps {
   isWidget?: boolean
-  initialMessage?: string
   className?: string
+  tokenData?: any
 }
 
 // Project knowledge base for the AI
@@ -31,16 +26,6 @@ const projectKnowledge = {
       jupiter: "https://jup.ag/swap/SOL-G7o5yXGyQPxUbPPJC6Apme7p5M1YqVoapQ2YbUsWpump",
       pumpfun: "https://pump.fun/coin/G7o5yXGyQPxUbPPJC6Apme7p5M1YqVoapQ2YbUsWpump",
     },
-    price: {
-      current: "$0.000042",
-      change24h: "+15%",
-      ath: "$0.000069",
-    },
-    marketCap: "$42,000",
-    liquidity: "$25,000",
-    volume24h: "$12,500",
-    holders: "24",
-    audit: "Audited by RatSec, no vulnerabilities found. Contract is non-upgradeable and ownership is renounced.",
   },
   nft: {
     name: "Degen Rug-Rats",
@@ -50,14 +35,22 @@ const projectKnowledge = {
     mintPrice: "0.1 SOL",
     mintStatus: "LIVE NOW",
     marketplaces: ["Tensor", "Magic Eden", "LaunchMyNFT"],
-    benefits: ["Exclusive Discord access", "Future airdrops", "Staking rewards", "Governance rights"],
+    benefits: [
+      "Exclusive Discord access",
+      "Future airdrops",
+      "Staking rewards",
+      "Governance rights",
+      "Early access to premium AI tools", // New utility
+      "Lowered or no fees on premium AI tools", // New utility
+      "Access to Alpha discord channels", // New utility
+    ],
   },
   community: {
     discord: "https://discord.gg/TnHKnJKP5w",
-    twitter: "https://x.com/MoandChi",
+    twitter: "https://x.com/MoandChi", // Using X instead of Twitter
     members: {
       discord: "18",
-      twitter: "42",
+      x: "42", // Changed from twitter to x
     },
     events: [
       {
@@ -98,26 +91,30 @@ const aiPersonality = {
     "Rats always find the best opportunities!",
     "In the crypto sewers, we thrive!",
   ],
+  jokes: [
+    "Why did the rat invest in crypto? Because he heard it was the CHEESE-iest way to make money!",
+    "What do you call a rat that trades NFTs? A non-fungible rodent!",
+    "How do rats store their crypto? In cold SQUEEEEZE wallets!",
+    "Why don't rats use centralized exchanges? They prefer to keep their coins in the DeFi sewers!",
+    "What's a rat's favorite blockchain? SOL-ana, because it's fast enough to escape the cats!",
+    "I tried to explain NFTs to my pet rat, but he just kept trying to eat the JPEG!",
+    "Why are rats good at crypto? They know when to scurry away from a rugpull!",
+    "What's a rat's favorite DEX? Jupiter, because it's out of this world!",
+    "How many rats does it take to mint an NFT? Just one, but you need a whole pack to pump it!",
+    "My rat friend lost his crypto wallet password. Now he's SQUEAKING by on faucet drops!",
+  ],
 }
 
-const AIChat = ({
-  isWidget = false,
-  initialMessage = "Yo, what's up rat gang! SewerKing here, your guide to all things Degen Rug-Rats. Wanna know about our token, NFT collection, or how to join the community? Just ask and I'll hook you up with that sweet alpha!",
-  className = "",
-}: AIChatProps) => {
+const AIChat = ({ isWidget = false, className = "", tokenData }: AIChatProps) => {
   const [message, setMessage] = useState("")
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
-    {
-      role: "assistant",
-      content: initialMessage,
-      id: "initial",
-    },
-  ])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const isMounted = useRef(true)
+
+  // Use the shared chat context
+  const { chatHistory, addMessage, resetChat } = useChat()
 
   // Scroll to bottom of chat when new messages are added
   useEffect(() => {
@@ -145,62 +142,92 @@ const AIChat = ({
     }
   }, [])
 
-  const resetChat = () => {
-    setChatHistory([
-      {
-        role: "assistant",
-        content: initialMessage,
-        id: "initial-reset",
-      },
-    ])
-    setError(null)
-  }
-
   // Helper function to get a random catchphrase
   const getRandomCatchphrase = () => {
     const randomIndex = Math.floor(Math.random() * aiPersonality.catchphrases.length)
     return aiPersonality.catchphrases[randomIndex]
   }
 
+  // Helper function to get a random joke
+  const getRandomJoke = () => {
+    const randomIndex = Math.floor(Math.random() * aiPersonality.jokes.length)
+    return aiPersonality.jokes[randomIndex]
+  }
+
+  // Format timestamp
+  const formatTimestamp = (timestamp: number) => {
+    return formatDistanceToNow(timestamp, { addSuffix: true })
+  }
+
+  // Export chat history
+  const exportChat = () => {
+    try {
+      const chatText = chatHistory
+        .map(
+          (msg) =>
+            `${msg.role === "user" ? "You" : "SewerKing"} (${new Date(msg.timestamp).toLocaleString()}): ${msg.content}`,
+        )
+        .join("\n\n")
+
+      const blob = new Blob([chatText], { type: "text/plain" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "degen-rugrats-chat.txt"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error("Error exporting chat:", error)
+    }
+  }
+
   // Generate a contextual response based on user input
   const generateResponse = (userInput: string) => {
     const input = userInput.toLowerCase()
 
-    // Helper function to ensure responses aren't too long
-    const formatResponse = (response: string) => {
-      // Ensure response isn't too long (max ~300 chars)
-      if (response.length > 300) {
-        return response.substring(0, 300) + "..."
-      }
-      return response
+    // Get live token data if available
+    const liveTokenPrice = tokenData?.price || 0.00000123
+    const liveTokenPriceChange = tokenData?.priceChange24h || 5.2
+    const liveMarketCap = tokenData?.marketCap || 38000
+    const liveVolume = tokenData?.volume24h || 15000
+    const liveLiquidity = tokenData?.liquidity || 25000
+    const liveHolders = tokenData?.holders || 24
+
+    // Check if user wants a joke
+    if (input.includes("joke") || input.includes("funny") || input.includes("laugh")) {
+      return `${getRandomCatchphrase()} Here's a rat joke for ya: ${getRandomJoke()} 🤣🐀`
     }
 
     // Price or token value questions
     if (input.includes("price") || input.includes("worth") || input.includes("value") || input.includes("chart")) {
-      return formatResponse(
-        `${getRandomCatchphrase()} The ${projectKnowledge.token.name} token is currently trading at ${projectKnowledge.token.price.current} with a ${projectKnowledge.token.price.change24h} change in the last 24 hours. Our all-time high is ${projectKnowledge.token.price.ath}! Market cap is sitting at ${projectKnowledge.token.marketCap} with ${projectKnowledge.token.liquidity} in liquidity. Volume in the last 24 hours is ${projectKnowledge.token.volume24h}. The chart's looking bullish AF right now - perfect time to load your bags!`,
-      )
+      return `${getRandomCatchphrase()} ${projectKnowledge.token.name} is currently at $${liveTokenPrice.toFixed(8)} (${liveTokenPriceChange >= 0 ? "+" : ""}${liveTokenPriceChange.toFixed(2)}% 24h). Market cap: $${liveMarketCap.toLocaleString()}. 24h volume: $${liveVolume.toLocaleString()}. Liquidity: $${liveLiquidity.toLocaleString()}. Chart's looking bullish AF right now! 📈🐀`
     }
 
     // How to buy questions
     if (input.includes("buy") || input.includes("get") || input.includes("purchase")) {
-      return formatResponse(
-        `Ready to join the rat pack? You can buy ${projectKnowledge.token.name} on Jupiter Exchange (${projectKnowledge.token.buyLinks.jupiter}) or PumpFun (${projectKnowledge.token.buyLinks.pumpfun}). Just connect your Solana wallet, swap some SOL for ${projectKnowledge.token.name}, and you're in! Contract address is ${projectKnowledge.token.contract} - always double-check it! Need help with the swap? Hit us up in the Discord and a mod will guide you through it.`,
-      )
+      return `Ready to join the rat pack? Buy on Jupiter (${projectKnowledge.token.buyLinks.jupiter}) or PumpFun (${projectKnowledge.token.buyLinks.pumpfun}). Contract: ${projectKnowledge.token.contract}. Connect wallet, swap SOL, and you're in! 💰🐀`
     }
 
     // NFT questions
     if (input.includes("nft") || input.includes("mint") || input.includes("collection")) {
-      return formatResponse(
-        `Our NFT collection is FIRE! We've got ${projectKnowledge.nft.total} total Degen Rug-Rats - ${projectKnowledge.nft.standard} standard editions and ${projectKnowledge.nft.special} super rare 1:1 special editions. Mint price is just ${projectKnowledge.nft.mintPrice} - absolute steal! Minting is ${projectKnowledge.nft.mintStatus}! Each NFT gets you ${projectKnowledge.nft.benefits.join(", ")}. You can find them on ${projectKnowledge.nft.marketplaces.join(", ")}. These rats are gonna MOON! 🐀💎`,
-      )
+      return `Our NFT collection is FIRE! ${projectKnowledge.nft.total} total Rats (${projectKnowledge.nft.standard} standard, ${projectKnowledge.nft.special} 1:1 specials). Mint price: ${projectKnowledge.nft.mintPrice}. Status: ${projectKnowledge.nft.mintStatus}! Utilities include early access to our premium AI tools, lowered/no fees, and access to our Alpha discord channels! Find them on ${projectKnowledge.nft.marketplaces.join(", ")}. 🐀💎`
+    }
+
+    // NFT utility specific questions
+    if (
+      input.includes("utility") ||
+      input.includes("utilities") ||
+      input.includes("benefit") ||
+      input.includes("benefits")
+    ) {
+      return `Our NFTs come with SICK utilities, rat! 1) Early access to our premium AI tools 2) Lowered or NO fees on our premium AI tools 3) Access to our Alpha discord channels where we share the juiciest calls 4) Exclusive Discord access 5) Future airdrops 6) Staking rewards 7) Governance rights. It's a no-brainer! 🧠🐀`
     }
 
     // Audit or security questions
     if (input.includes("audit") || input.includes("safe") || input.includes("security") || input.includes("rug")) {
-      return formatResponse(
-        `Security first, rat fam! ${projectKnowledge.token.audit} We take security seriously - despite our name, we're not here to rug anyone! The liquidity is locked, and the team tokens are vested with a transparent schedule. Always DYOR, but we've made sure this project is as safe as a rat in its burrow!`,
-      )
+      return `Security first, rat fam! Contract is audited, liquidity locked, team tokens vested. Despite our name, we're not here to rug anyone! We're building long-term value for our community. 🔒🐀`
     }
 
     // Community questions
@@ -211,23 +238,17 @@ const AIChat = ({
       input.includes("twitter") ||
       input.includes("join")
     ) {
-      return formatResponse(
-        `The Degen Rug-Rats community is the most savage crew in the sewers! Join our Discord at ${projectKnowledge.community.discord} or follow us on Twitter at ${projectKnowledge.community.twitter}. We've got ${projectKnowledge.community.members.discord} rats in Discord and ${projectKnowledge.community.members.twitter} following us on Twitter. We're growing fast! We've got upcoming events like ${projectKnowledge.community.events[0].name} on ${projectKnowledge.community.events[0].date} and ${projectKnowledge.community.events[1].name} on ${projectKnowledge.community.events[1].date}. Don't miss out on the alpha!`,
-      )
+      return `Join our Discord (${projectKnowledge.community.discord}) or X (${projectKnowledge.community.twitter}). We've got ${projectKnowledge.community.members.discord} Discord rats and ${projectKnowledge.community.members.x} X followers. Don't miss our upcoming events! The sewers are getting crowded with smart rats! 🐀🧠`
     }
 
     // Roadmap questions
     if (input.includes("roadmap") || input.includes("future") || input.includes("plan") || input.includes("coming")) {
-      return formatResponse(
-        `Our roadmap is stacked, rat fam! We've already completed ${projectKnowledge.roadmap.completed.join(", ")}. Right now we're focused on ${projectKnowledge.roadmap.current.join(", ")}. Coming up next is ${projectKnowledge.roadmap.upcoming.slice(0, 3).join(", ")}, and long-term we're looking at ${projectKnowledge.roadmap.upcoming.slice(3).join(", ")}. The future's bright for us rats! 💰🔮`,
-      )
+      return `Our roadmap is stacked! Completed: ${projectKnowledge.roadmap.completed.join(", ")}. Current: ${projectKnowledge.roadmap.current.join(", ")}. Next up: ${projectKnowledge.roadmap.upcoming.slice(0, 3).join(", ")}. The future's bright for us rats! 💰🔮`
     }
 
     // Team questions
     if (input.includes("team") || input.includes("founder") || input.includes("dev") || input.includes("who")) {
-      return formatResponse(
-        `The Degen Rug-Rats team is a group of crypto OGs who've been through multiple market cycles. They prefer to stay anon (smart in this space, ya know?), but they're super active in the Discord. The lead dev has worked on several successful Solana projects before, and our marketing rat has serious connections in the space. Come chat with them directly in our Discord - they're always dropping alpha!`,
-      )
+      return `The team is crypto OGs who've been through multiple market cycles. They're anon but super active in Discord. Our lead dev worked on several successful Solana projects before! These rats know how to build! 🛠️🐀`
     }
 
     // Tokenomics questions
@@ -237,9 +258,12 @@ const AIChat = ({
       input.includes("distribution") ||
       input.includes("allocation")
     ) {
-      return formatResponse(
-        `Here's the cheese on our tokenomics: Total supply is ${projectKnowledge.token.totalSupply} ${projectKnowledge.token.name}. 40% for liquidity (locked for 6 months), 20% for marketing (vested over 12 months), 15% for development (vested over 18 months), 15% for community rewards and airdrops, and 10% for the team (vested over 24 months). No presale, no VCs, just a fair launch for all the rats in the sewer!`,
-      )
+      return `Total supply: ${projectKnowledge.token.totalSupply} ${projectKnowledge.token.name}. 40% liquidity, 20% marketing, 15% dev, 15% community, 10% team. No presale, no VCs, just a fair launch! Current holders: ${liveHolders}. We're growing every day! 📈🐀`
+    }
+
+    // AI tools questions
+    if (input.includes("ai") || input.includes("tool") || input.includes("premium")) {
+      return `Our premium AI tools are gonna revolutionize how degens trade! NFT holders get early access and reduced/no fees. We're talking trading signals, market analysis, sentiment tracking, and more! It's like having a whole team of quants in your pocket! 🤖🐀`
     }
 
     // Greeting or general questions
@@ -250,15 +274,11 @@ const AIChat = ({
       input.includes("sup") ||
       input.includes("yo")
     ) {
-      return formatResponse(
-        `Yo, what's good rat gang! ${getRandomCatchphrase()} How can I help you navigate the sewers today? Want some alpha on our token, NFTs, or community?`,
-      )
+      return `Yo, what's good rat gang! ${getRandomCatchphrase()} How can I help you navigate the sewers today? Want some alpha on our token, NFTs, or community? Or maybe a rat joke to lighten the mood? 🐀😎`
     }
 
     // Default response for other questions
-    return formatResponse(
-      `Thanks for asking about "${userInput.substring(0, 30)}${userInput.length > 30 ? "..." : ""}". ${getRandomCatchphrase()} The Degen Rug-Rats project combines a Solana token with an NFT collection, creating a community of crypto enthusiasts. Our token ${projectKnowledge.token.name} is on Solana with a total supply of ${projectKnowledge.token.totalSupply}. We're currently minting our NFT collection with ${projectKnowledge.nft.standard} standard and ${projectKnowledge.nft.special} special editions. Anything specific about our token, NFTs, or community you'd like to know more about? I'm your rat, just ask!`,
-    )
+    return `${getRandomCatchphrase()} Degen Rug-Rats is a Solana token (${projectKnowledge.token.name}) with ${projectKnowledge.nft.total} NFTs. Our NFTs give you early access to premium AI tools, reduced fees, and Alpha discord channels! What specific alpha you looking for? Token, NFTs, or community info? I'm your rat! 🐀💰`
   }
 
   const handleSendMessage = async () => {
@@ -268,7 +288,7 @@ const AIChat = ({
     const userMessageId = `user-${Date.now()}`
 
     // Add user message to chat
-    setChatHistory((prev) => [...prev, { role: "user", content: userMessageText, id: userMessageId }])
+    addMessage({ role: "user", content: userMessageText, id: userMessageId })
     setIsLoading(true)
     setError(null)
     setMessage("") // Clear input field
@@ -282,20 +302,17 @@ const AIChat = ({
 
       if (isMounted.current) {
         // Add AI response to chat
-        setChatHistory((prev) => [...prev, { role: "assistant", content: aiResponse, id: `assistant-${Date.now()}` }])
+        addMessage({ role: "assistant", content: aiResponse, id: `assistant-${Date.now()}` })
       }
     } catch (error) {
       console.error("Error in handleSendMessage:", error)
       if (isMounted.current) {
         setError("Failed to get response. Try again.")
-        setChatHistory((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: "Yo, the sewers are flooded right now! Try again in a bit, rat fam!",
-            id: `error-${Date.now()}`,
-          },
-        ])
+        addMessage({
+          role: "assistant",
+          content: "Yo, the sewers are flooded right now! Try again in a bit, rat fam!",
+          id: `error-${Date.now()}`,
+        })
       }
     } finally {
       if (isMounted.current) {
@@ -317,8 +334,74 @@ const AIChat = ({
     }
   }
 
+  // Quick response buttons
+  const quickResponses = [
+    {
+      text: "Token price?",
+      onClick: () => {
+        setMessage("What's the current token price?")
+      },
+    },
+    {
+      text: "NFT utilities?",
+      onClick: () => {
+        setMessage("What utilities do the NFTs have?")
+      },
+    },
+    {
+      text: "How to buy?",
+      onClick: () => {
+        setMessage("How can I buy the token?")
+      },
+    },
+    {
+      text: "Tell me a joke",
+      onClick: () => {
+        setMessage("Tell me a crypto rat joke")
+      },
+    },
+  ]
+
   return (
     <div className={`flex flex-col ${isWidget ? "h-full" : "h-[600px]"} ${className}`}>
+      {/* Add global styles for scrollbars */}
+      <style jsx global>{`
+        /* Force scrollbar to always be visible */
+        .force-scrollbar {
+          overflow-y: scroll !important;
+          scrollbar-width: auto !important;
+          scrollbar-color: #ff5757 #333333 !important;
+        }
+        
+        /* Extremely visible scrollbar for WebKit browsers */
+        .force-scrollbar::-webkit-scrollbar {
+          width: 16px !important;
+          background-color: #333333 !important;
+          display: block !important;
+          visibility: visible !important;
+        }
+        
+        .force-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #ff5757 !important;
+          border-radius: 8px !important;
+          border: 3px solid #333333 !important;
+          min-height: 40px !important;
+          visibility: visible !important;
+          display: block !important;
+        }
+        
+        .force-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: #ff7777 !important;
+        }
+        
+        .force-scrollbar::-webkit-scrollbar-track {
+          background-color: #333333 !important;
+          border-radius: 8px !important;
+          visibility: visible !important;
+          display: block !important;
+        }
+      `}</style>
+
       <div className="p-3 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-rat-primary/20">
@@ -330,39 +413,58 @@ const AIChat = ({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {error && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-gray-400 hover:text-white"
-              onClick={resetChat}
-              title="Reset chat"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-gray-400 hover:text-white"
+            onClick={exportChat}
+            title="Export chat"
+          >
+            <Download className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-gray-400 hover:text-white"
+            onClick={resetChat}
+            title="Reset chat"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </Button>
           <Badge className="bg-green-500/20 text-green-500 border-none">Online</Badge>
         </div>
       </div>
 
+      {/* Chat container with forced scrollbar */}
       <div
         ref={chatContainerRef}
-        className={`flex-1 overflow-y-auto p-3 space-y-3 bg-gray-900 ${isWidget ? "h-80" : ""} scrollbar-custom`}
+        className="force-scrollbar flex-1 p-3 space-y-3 bg-gray-900"
+        style={{
+          minHeight: isWidget ? "200px" : "300px",
+          maxHeight: isWidget ? "70vh" : "500px",
+          overflowY: "scroll",
+          WebkitOverflowScrolling: "touch",
+          msOverflowStyle: "scrollbar",
+        }}
       >
         {chatHistory.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+          <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
             <div
-              className={`max-w-[80%] rounded-lg p-3 break-words overflow-hidden ${
+              className={`max-w-[80%] rounded-lg p-3 break-words ${
                 msg.role === "user" ? "bg-rat-primary/20 text-white" : "bg-gray-800 text-gray-200"
               }`}
             >
               {msg.content}
             </div>
+            <div className="text-xs text-gray-500 mt-1 flex items-center">
+              <Clock className="h-3 w-3 mr-1" />
+              {formatTimestamp(msg.timestamp)}
+            </div>
           </div>
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="max-w-[80%] rounded-lg p-3 break-words overflow-hidden bg-gray-800 text-gray-200">
+            <div className="max-w-[80%] rounded-lg p-3 break-words bg-gray-800 text-gray-200">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-rat-primary rounded-full animate-pulse"></div>
                 <div className="w-2 h-2 bg-rat-primary rounded-full animate-pulse delay-150"></div>
@@ -371,6 +473,23 @@ const AIChat = ({
             </div>
           </div>
         )}
+        {/* Add extra space at the bottom to ensure scrollability */}
+        <div style={{ height: "20px" }}></div>
+      </div>
+
+      {/* Quick response buttons */}
+      <div className="p-2 border-t border-gray-800 bg-gray-900 flex flex-wrap gap-2">
+        {quickResponses.map((response, index) => (
+          <Button
+            key={index}
+            variant="outline"
+            size="sm"
+            className="text-xs border-gray-700 hover:bg-rat-primary/20 hover:text-white"
+            onClick={response.onClick}
+          >
+            {response.text}
+          </Button>
+        ))}
       </div>
 
       <div className="p-3 border-t border-gray-800 bg-gray-900">

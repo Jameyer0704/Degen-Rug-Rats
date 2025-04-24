@@ -82,30 +82,64 @@
   }
 }
 
-/* Custom scrollbar styling */
-.scrollbar-custom {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(75, 75, 75, 0.5) rgba(30, 30, 30, 0.1);
+/* Global scrollbar styling */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255, 87, 87, 0.6) rgba(30, 30, 30, 0.3);
 }
 
-.scrollbar-custom::-webkit-scrollbar {
-  width: 8px;
+*::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
 }
 
-.scrollbar-custom::-webkit-scrollbar-track {
-  background: rgba(30, 30, 30, 0.1);
+*::-webkit-scrollbar-track {
+  background: rgba(30, 30, 30, 0.3);
   border-radius: 4px;
 }
 
-.scrollbar-custom::-webkit-scrollbar-thumb {
-  background-color: rgba(75, 75, 75, 0.5);
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 87, 87, 0.6);
   border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
+  border: 3px solid rgba(30, 30, 30, 0.3);
+  min-height: 40px;
 }
 
-.scrollbar-custom::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(100, 100, 100, 0.7);
-  border: 2px solid transparent;
-  background-clip: padding-box;
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 87, 87, 0.8);
+}
+
+/* Force scrollbar to always be visible */
+.force-scrollbar {
+  overflow-y: scroll !important;
+  scrollbar-width: auto !important;
+  scrollbar-color: #ff5757 #333333 !important;
+}
+
+/* Extremely visible scrollbar for WebKit browsers */
+.force-scrollbar::-webkit-scrollbar {
+  width: 16px !important;
+  background-color: #333333 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.force-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #ff5757 !important;
+  border-radius: 8px !important;
+  border: 3px solid #333333 !important;
+  min-height: 40px !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+.force-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #ff7777 !important;
+}
+
+.force-scrollbar::-webkit-scrollbar-track {
+  background-color: #333333 !important;
+  border-radius: 8px !important;
+  visibility: visible !important;
+  display: block !important;
 }
