@@ -23,7 +23,11 @@ interface TipJarProps {
   className?: string
 }
 
-const TipJar = ({ recipientAddress, variant = "default", className = "" }: TipJarProps) => {
+const TipJar = ({
+  recipientAddress = "Aq6YoBjyDow9SajNHRsk6u4Yx1EirxgufB4SQSyDjLww",
+  variant = "default",
+  className = "",
+}: TipJarProps) => {
   const [amount, setAmount] = useState(0.05)
   const [isConnected, setIsConnected] = useState(false)
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
@@ -109,23 +113,32 @@ const TipJar = ({ recipientAddress, variant = "default", className = "" }: TipJa
       const provider = window.phantom.solana
 
       // Create a Solana transaction
-      const transaction = new window.solana.Transaction()
+      const connection = provider.connection
+      const fromPubkey = new window.solana.PublicKey(walletAddress)
+      const toPubkey = new window.solana.PublicKey(recipientAddress)
 
-      // Add a transfer instruction to the transaction
-      const lamports = amount * 1000000000 // Convert SOL to lamports
+      // Convert SOL to lamports (1 SOL = 1,000,000,000 lamports)
+      const lamports = Math.round(amount * 1000000000)
 
-      // Create a SystemProgram transfer instruction
-      const transferInstruction = window.solana.SystemProgram.transfer({
-        fromPubkey: new window.solana.PublicKey(walletAddress),
-        toPubkey: new window.solana.PublicKey(recipientAddress),
-        lamports: lamports,
+      // Create a transfer instruction
+      const instruction = window.solana.SystemProgram.transfer({
+        fromPubkey,
+        toPubkey,
+        lamports,
       })
 
-      // Add the instruction to the transaction
-      transaction.add(transferInstruction)
+      // Get recent blockhash
+      const { blockhash } = await connection.getRecentBlockhash()
 
-      // Send the transaction
-      const signature = await provider.signAndSendTransaction(transaction)
+      // Create transaction and add the instruction
+      const transaction = new window.solana.Transaction({
+        recentBlockhash: blockhash,
+        feePayer: fromPubkey,
+      }).add(instruction)
+
+      // Sign and send the transaction
+      const { signature } = await provider.signAndSendTransaction(transaction)
+
       console.log("Transaction sent with signature:", signature)
 
       // Show success message
@@ -145,7 +158,7 @@ const TipJar = ({ recipientAddress, variant = "default", className = "" }: TipJa
       }, 2000)
     } catch (error) {
       console.error("Error sending tip:", error)
-      setError("Failed to send tip. Please try again.")
+      setError(error.message || "Failed to send tip. Please try again.")
 
       // Show error toast
       toast({
