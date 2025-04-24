@@ -7,17 +7,24 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MessageSquare, Users, Calendar, Bot, Sparkles, ExternalLink } from "lucide-react"
+import { MessageSquare, Users, Calendar, Bot, Sparkles, ExternalLink, DiscIcon as Discord, Twitter } from "lucide-react"
 import AIChat from "@/components/ai-chat"
 import { getTokenData } from "@/lib/token-service"
 import { formatCurrency } from "@/lib/utils"
 import { getNFTs } from "@/lib/nft-service"
+import { Badge } from "@/components/ui/badge"
 
 // Token contract address
 const TOKEN_CONTRACT = "G7o5yXGyQPxUbPPJC6Apme7p5M1YqVoapQ2YbUsWpump"
 const BUY_TOKEN_URL = `https://jup.ag/swap/SOL-${TOKEN_CONTRACT}`
 const PUMPFUN_URL = `https://pump.fun/coin/${TOKEN_CONTRACT}`
 const DISCORD_URL = "https://discord.gg/TnHKnJKP5w"
+
+// Define image paths as constants to avoid empty strings
+const SEWER_BG_IMAGE = "/images/sewer-bg.png"
+const SEWER_TUNNEL_IMAGE = "/images/sewer-tunnel.jpg"
+const DEGEN_LOGO_IMAGE = "/images/degen-logo.png"
+const RAT_KING_IMAGE = "/images/evil-rat-king.png"
 
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false)
@@ -33,7 +40,7 @@ export default function Home() {
     burnedSupply: 0,
     holders: 24,
   })
-  const [nfts, setNfts] = useState([])
+  const [nfts, setNfts] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   // Refs for section navigation
@@ -95,14 +102,14 @@ export default function Home() {
         className="pt-24 pb-20 relative bg-black min-h-screen flex items-center"
       >
         <div className="absolute inset-0 opacity-20 z-0">
-          <Image src="/images/sewer-bg.png" alt="Background" fill className="object-cover" />
+          <Image src={SEWER_BG_IMAGE || "/placeholder.svg"} alt="Sewer Background" fill className="object-cover" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="mb-6">
                 <Image
-                  src="/images/degen-logo.png"
+                  src={DEGEN_LOGO_IMAGE || "/placeholder.svg"}
                   alt="Degen Rug-Rats"
                   width={400}
                   height={150}
@@ -162,7 +169,7 @@ export default function Home() {
             </div>
 
             <div className="relative aspect-square rounded-lg overflow-hidden shadow-[0_0_30px_rgba(255,87,87,0.3)]">
-              <Image src="/images/evil-rat-king.png" alt="$DEGEN Token" fill className="object-cover" />
+              <Image src={RAT_KING_IMAGE || "/placeholder.svg"} alt="$DEGEN Token" fill className="object-cover" />
             </div>
           </div>
         </div>
@@ -186,8 +193,12 @@ export default function Home() {
       </section>
 
       {/* NFT Preview Section */}
-      <section id="nfts" ref={nftSectionRef} className="py-20 bg-black/80">
-        <div className="container mx-auto px-4">
+      <section id="nfts" ref={nftSectionRef} className="py-20 relative bg-black/80">
+        {/* Different sewer background for NFT section */}
+        <div className="absolute inset-0 opacity-20 z-0">
+          <Image src={SEWER_TUNNEL_IMAGE || "/placeholder.svg"} alt="Sewer Tunnel" fill className="object-cover" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-orbitron font-bold mb-4">
               NFT <span className="text-rat-primary">Collection</span>
@@ -274,8 +285,19 @@ export default function Home() {
       </section>
 
       {/* Community Section */}
-      <section id="community" ref={communitySectionRef} className="py-20 bg-black">
-        <div className="container mx-auto px-4">
+      <section id="community" ref={communitySectionRef} className="py-20 relative bg-black">
+        {/* Different sewer background for community section */}
+        <div className="absolute inset-0 opacity-25 z-0 overflow-hidden">
+          <div className="absolute inset-0 rotate-180">
+            <Image
+              src={SEWER_BG_IMAGE || "/placeholder.svg"}
+              alt="Sewer Background"
+              fill
+              className="object-cover object-bottom"
+            />
+          </div>
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-orbitron font-bold mb-4">
               Degen Rug-Rats <span className="text-rat-primary">Community</span>
@@ -311,6 +333,190 @@ export default function Home() {
                 </TabsTrigger>
               </TabsList>
             </div>
+
+            <TabsContent value="social">
+              <div className="space-y-6">
+                <p className="text-gray-400 text-center max-w-2xl mx-auto">
+                  Connect with the Degen Rug-Rats community on various social platforms. Join our underground movement
+                  and get the latest alpha.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Discord Card */}
+                  <Card className="border-0 overflow-hidden bg-gradient-to-br from-[#5865F2]/20 to-[#5865F2]/5 shadow-lg shadow-[#5865F2]/10">
+                    <CardContent className="p-0">
+                      <div className="bg-[#5865F2] p-4 flex justify-between items-center">
+                        <h3 className="text-white font-orbitron text-lg">Discord</h3>
+                        <Discord className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="p-6 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Members</span>
+                          <span className="text-xl font-bold text-white">18</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Channels</span>
+                          <span className="text-xl font-bold text-white">12</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Alpha Channels</span>
+                          <span className="text-xl font-bold text-white">4</span>
+                        </div>
+                        <Button
+                          className="w-full bg-[#5865F2] hover:bg-[#5865F2]/90 text-white mt-4"
+                          onClick={() => window.open("https://discord.gg/TnHKnJKP5w", "_blank")}
+                        >
+                          <Discord className="h-5 w-5 mr-2" />
+                          Join Discord
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* X (Twitter) Card - Now in black and white */}
+                  <Card className="border-0 overflow-hidden bg-gradient-to-br from-gray-800/30 to-gray-900/20 shadow-lg shadow-black/20">
+                    <CardContent className="p-0">
+                      <div className="bg-black p-4 flex justify-between items-center">
+                        <h3 className="text-white font-orbitron text-lg">X</h3>
+                        <Twitter className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="p-6 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Followers</span>
+                          <span className="text-xl font-bold text-white">42</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Posts</span>
+                          <span className="text-xl font-bold text-white">69</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Alpha Posts</span>
+                          <span className="text-xl font-bold text-white">24</span>
+                        </div>
+                        <Button
+                          className="w-full bg-black hover:bg-gray-900 text-white mt-4"
+                          onClick={() => window.open("https://x.com/MoandChi", "_blank")}
+                        >
+                          <Twitter className="h-5 w-5 mr-2" />
+                          Follow on X
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Telegram Card */}
+                  <Card className="border-0 overflow-hidden bg-gradient-to-br from-[#0088cc]/20 to-[#0088cc]/5 shadow-lg shadow-[#0088cc]/10">
+                    <CardContent className="p-0">
+                      <div className="bg-[#0088cc] p-4 flex justify-between items-center">
+                        <h3 className="text-white font-orbitron text-lg">Telegram</h3>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-white"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.717-.962 4.963-1.358 6.585-.165.673-.32 1.797-.878 1.797-.558 0-.782-.516-1.243-.956-.69-.658-1.083-1.056-1.757-1.707-.777-.738-.273-1.14.169-1.8.116-.174 2.145-1.958 2.182-2.124.005-.021.009-.103-.039-.146-.048-.044-.117-.03-.168-.018-.071.018-1.204.752-3.397 2.204-.322.209-.613.311-.874.306-.288-.005-.839-.155-1.25-.284-.506-.158-.908-.24-.872-.506.018-.133.193-.27.526-.41 2.071-.878 3.45-1.457 4.14-1.737 1.967-.798 2.376-.935 2.643-.935.059 0 .188.013.272.073.07.05.089.116.099.166.014.088.023.18.012.274z" />
+                        </svg>
+                      </div>
+                      <div className="p-6 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Members</span>
+                          <span className="text-xl font-bold text-white">36</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Daily Messages</span>
+                          <span className="text-xl font-bold text-white">420</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Alpha Signals</span>
+                          <span className="text-xl font-bold text-white">15</span>
+                        </div>
+                        <Button
+                          className="w-full bg-[#0088cc] hover:bg-[#0088cc]/90 text-white mt-4"
+                          onClick={() => window.open("https://t.me/degenrugrats", "_blank")}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-2"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.717-.962 4.963-1.358 6.585-.165.673-.32 1.797-.878 1.797-.558 0-.782-.516-1.243-.956-.69-.658-1.083-1.056-1.757-1.707-.777-.738-.273-1.14.169-1.8.116-.174 2.145-1.958 2.182-2.124.005-.021.009-.103-.039-.146-.048-.044-.117-.03-.168-.018-.071.018-1.204.752-3.397 2.204-.322.209-.613.311-.874.306-.288-.005-.839-.155-1.25-.284-.506-.158-.908-.24-.872-.506.018-.133.193-.27.526-.41 2.071-.878 3.45-1.457 4.14-1.737 1.967-.798 2.376-.935 2.643-.935.059 0 .188.013.272.073.07.05.089.116.099.166.014.088.023.18.012.274z" />
+                          </svg>
+                          Join Telegram
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <Card className="sewer-card border-gray-800 overflow-hidden mt-8">
+                  <CardContent className="p-0">
+                    <div className="p-4 border-b border-gray-800">
+                      <h4 className="font-orbitron font-bold">Community Overview</h4>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-800">
+                      <div className="p-4 text-center">
+                        <p className="text-2xl font-bold text-rat-primary">96</p>
+                        <p className="text-gray-400 text-sm">Total Members</p>
+                      </div>
+                      <div className="p-4 text-center">
+                        <p className="text-2xl font-bold text-rat-secondary">24</p>
+                        <p className="text-gray-400 text-sm">Token Holders</p>
+                      </div>
+                      <div className="p-4 text-center">
+                        <p className="text-2xl font-bold text-rat-gold">12</p>
+                        <p className="text-gray-400 text-sm">NFT Holders</p>
+                      </div>
+                      <div className="p-4 text-center">
+                        <p className="text-2xl font-bold text-green-500">7</p>
+                        <p className="text-gray-400 text-sm">Active Mods</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="events">
+              <div className="space-y-4">
+                <p className="text-gray-400">
+                  Stay updated with upcoming community events, token launches, and NFT drops.
+                </p>
+
+                <div className="space-y-3">
+                  {[
+                    {
+                      title: "First RugPull",
+                      date: "April 25-26, 2025",
+                      desc: "Join us for our first community RugPull event. Learn the art of the pull and how to spot the next victim.",
+                    },
+                    {
+                      title: "Sewer Raid",
+                      date: "May 10, 2025",
+                      desc: "Coordinated buying event to pump the token. Bring your SOL and your degen energy.",
+                    },
+                    {
+                      title: "Rat Pack Meetup",
+                      date: "May 20, 2025",
+                      desc: "IRL meetup for the most degen rats. Share strategies and celebrate our gains.",
+                    },
+                  ].map((event, i) => (
+                    <Card key={i} className="sewer-card border-gray-800">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-orbitron font-bold text-white">{event.title}</h4>
+                            <p className="text-gray-400 text-sm mt-1">{event.desc}</p>
+                          </div>
+                          <Badge className="bg-rat-primary/20 text-rat-primary border-none">{event.date}</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
 
             <TabsContent value="ai-chat">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
