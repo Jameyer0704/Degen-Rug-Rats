@@ -2,12 +2,14 @@
 
 import { useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
+import Script from "next/script"
 import Image from "next/image"
-import MintButton from "@/components/mint-button"
 
 export default function MintPage() {
   useEffect(() => {
-    // No longer defining global variables or including script tags here
+    // Define global variables for the LaunchMyNFT script
+    window.ownerId = "Aq6YoBjyDow9SajNHRsk6u4Yx1EirxgufB4SQSyDjLww"
+    window.collectionId = "dM7WPNgIA0hj5aCvevc2"
   }, [])
 
   return (
@@ -136,7 +138,11 @@ export default function MintPage() {
                   </div>
 
                   <div className="pt-4">
-                    <MintButton />
+                    {/* LaunchMyNFT Mint Button Container */}
+                    <div id="mint-button-container" className="mb-4"></div>
+
+                    {/* LaunchMyNFT Mint Counter */}
+                    <div id="mint-counter" className="text-center"></div>
                   </div>
                 </div>
               </CardContent>
@@ -144,6 +150,14 @@ export default function MintPage() {
           </div>
         </div>
       </div>
+
+      {/* LaunchMyNFT Scripts */}
+      <Script
+        src="https://storage.googleapis.com/scriptslmt/0.1.3/solana.js"
+        type="module"
+        strategy="afterInteractive"
+      />
+      <link rel="stylesheet" href="https://storage.googleapis.com/scriptslmt/0.1.3/solana.css" />
     </div>
   )
 }

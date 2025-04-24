@@ -7,51 +7,18 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  MessageSquare,
-  Users,
-  Calendar,
-  Bot,
-  Sparkles,
-  ExternalLink,
-  DiscIcon as Discord,
-  Twitter,
-  TrendingUp,
-} from "lucide-react"
+import { MessageSquare, Users, Calendar, Bot, Sparkles, ExternalLink, DiscIcon as Discord, Twitter } from "lucide-react"
 import AIChat from "@/components/ai-chat"
 import { getTokenData } from "@/lib/token-service"
 import { formatCurrency } from "@/lib/utils"
 import { getNFTs } from "@/lib/nft-service"
 import { Badge } from "@/components/ui/badge"
-import MintButton from "@/components/mint-button"
 
 // Token contract address
 const TOKEN_CONTRACT = "G7o5yXGyQPxUbPPJC6Apme7p5M1YqVoapQ2YbUsWpump"
 const BUY_TOKEN_URL = `https://jup.ag/swap/SOL-${TOKEN_CONTRACT}`
 const PUMPFUN_URL = `https://pump.fun/coin/${TOKEN_CONTRACT}`
 const DISCORD_URL = "https://discord.gg/TnHKnJKP5w"
-
-// Define image paths as constants
-const SEWER_BG_IMAGE = "/images/sewer-bg.png"
-const SEWER_TUNNEL_IMAGE = "/images/sewer-tunnel.jpg"
-const DEGEN_LOGO_IMAGE = "/images/degen-logo.png"
-const RAT_KING_IMAGE = "/images/evil-rat-king.png"
-
-function PumpFunTracker() {
-  return (
-    <Card className="border-gray-800 bg-gray-900/50">
-      <CardContent className="p-6">
-        <h3 className="font-orbitron font-bold mb-4">PumpFun Chart</h3>
-        <iframe
-          src={`https://pump.fun/embed/${TOKEN_CONTRACT}`}
-          width="100%"
-          height="400px"
-          style={{ border: "none" }}
-        ></iframe>
-      </CardContent>
-    </Card>
-  )
-}
 
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false)
@@ -208,7 +175,7 @@ export default function Home() {
 
             <div className="relative aspect-square rounded-lg overflow-hidden shadow-[0_0_30px_rgba(255,87,87,0.3)]">
               <Image
-                src="/images/evil-rat-king.png"
+                src="/images/crypto-rat-boss.png"
                 alt="$DEGEN Token"
                 fill
                 className="object-cover"
@@ -261,6 +228,61 @@ export default function Home() {
               Explore our exclusive collection of Degen Rug-Rats NFTs - 69 standard editions and 20 rare 1:1 special
               editions
             </p>
+          </div>
+
+          {/* NFT Showcase */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg group">
+              <Image
+                src="/images/crypto-rat-crew.png"
+                alt="Degen Rug-Rats NFT"
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.svg"
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                <div className="p-4 w-full">
+                  <h3 className="text-white font-orbitron text-lg">Crypto Rat Crew</h3>
+                  <p className="text-gray-300 text-sm">Standard Edition</p>
+                </div>
+              </div>
+            </div>
+            <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg group">
+              <Image
+                src="/images/street-rats-squad.png"
+                alt="Degen Rug-Rats NFT"
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.svg"
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                <div className="p-4 w-full">
+                  <h3 className="text-white font-orbitron text-lg">Street Rats Squad</h3>
+                  <p className="text-gray-300 text-sm">Standard Edition</p>
+                </div>
+              </div>
+            </div>
+            <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg group">
+              <Image
+                src="/images/neon-rat-gang.png"
+                alt="Degen Rug-Rats NFT"
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.svg"
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                <div className="p-4 w-full">
+                  <h3 className="text-white font-orbitron text-lg">Neon Rat Gang</h3>
+                  <p className="text-gray-300 text-sm">Special 1:1 Edition</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="mb-8 p-6 degen-card rounded-lg">
@@ -328,7 +350,12 @@ export default function Home() {
           </div>
 
           <div className="mt-8 text-center">
-            <MintButton className="mt-6" />
+            <Button
+              className="bg-rat-primary hover:bg-rat-primary/90 text-white"
+              onClick={() => window.open("https://launchmynft.io/sol/15827", "_blank")}
+            >
+              Mint Your Degen Rug-Rat
+            </Button>
           </div>
         </div>
       </section>
@@ -368,13 +395,6 @@ export default function Home() {
                 >
                   <Users className="mr-2 h-4 w-4" />
                   Social
-                </TabsTrigger>
-                <TabsTrigger
-                  value="market"
-                  className="data-[state=active]:bg-rat-primary data-[state=active]:text-white"
-                >
-                  <TrendingUp className="mr-2 h-4 w-4" />
-                  Market
                 </TabsTrigger>
                 <TabsTrigger
                   value="events"
@@ -534,42 +554,6 @@ export default function Home() {
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="market">
-              <div className="space-y-6">
-                <p className="text-gray-400 text-center max-w-2xl mx-auto">
-                  Track real-time market activity for $DEGEN token on PumpFun and other exchanges.
-                </p>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <PumpFunTracker />
-
-                  <Card className="border-gray-800 bg-gray-900/50">
-                    <CardContent className="p-6">
-                      <h3 className="font-orbitron font-bold mb-4">Market Stats</h3>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">24h Volume</span>
-                          <span className="font-bold">$15,420</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Market Cap</span>
-                          <span className="font-bold">$38,000</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Liquidity</span>
-                          <span className="font-bold">$25,000</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Holders</span>
-                          <span className="font-bold">24</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
               </div>
             </TabsContent>
 

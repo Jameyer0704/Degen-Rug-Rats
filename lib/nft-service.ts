@@ -32,8 +32,7 @@ export async function getNFTs(): Promise<NFT[]> {
       {
         id: "1",
         name: "Degen Rug-Rat #42",
-        image:
-          "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://arweave.net/Oc5I9oi-GBxU5UQVNOkiIQbfoYOcYA9P-NbJcRZDYSA",
+        image: "/images/crypto-rat-crew.png",
         price: 0.42,
         collection: "Degen Rug-Rats",
         marketplace: "Magic Eden",
@@ -43,8 +42,7 @@ export async function getNFTs(): Promise<NFT[]> {
       {
         id: "2",
         name: "Degen Rug-Rat #69",
-        image:
-          "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://arweave.net/Oc5I9oi-GBxU5UQVNOkiIQbfoYOcYA9P-NbJcRZDYSA",
+        image: "/images/street-rats-squad.png",
         price: 0.69,
         collection: "Degen Rug-Rats",
         marketplace: "Tensor",
@@ -54,19 +52,18 @@ export async function getNFTs(): Promise<NFT[]> {
       {
         id: "3",
         name: "Degen Rug-Rat #007",
-        image:
-          "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://arweave.net/Oc5I9oi-GBxU5UQVNOkiIQbfoYOcYA9P-NbJcRZDYSA",
+        image: "/images/neon-rat-gang.png",
         price: 0.42,
         collection: "Degen Rug-Rats",
         marketplace: "LaunchMyNFT",
         marketplaceUrl: "https://launchmynft.io/sol/15827",
         floorPrice: 0.42,
+        isOneOfOne: true,
       },
       {
         id: "4",
         name: "Degen Rug-Rat #13",
-        image:
-          "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://arweave.net/Oc5I9oi-GBxU5UQVNOkiIQbfoYOcYA9P-NbJcRZDYSA",
+        image: "/images/bitcoin-rats.png",
         price: 0.42,
         collection: "Degen Rug-Rats",
         marketplace: "Magic Eden",
@@ -76,8 +73,7 @@ export async function getNFTs(): Promise<NFT[]> {
       {
         id: "5",
         name: "Degen Rug-Rat #420",
-        image:
-          "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://arweave.net/Oc5I9oi-GBxU5UQVNOkiIQbfoYOcYA9P-NbJcRZDYSA",
+        image: "/images/crypto-winter-rats.png",
         price: 0.42,
         collection: "Degen Rug-Rats",
         marketplace: "Tensor",
@@ -87,13 +83,13 @@ export async function getNFTs(): Promise<NFT[]> {
       {
         id: "6",
         name: "Degen Rug-Rat #777",
-        image:
-          "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://arweave.net/Oc5I9oi-GBxU5UQVNOkiIQbfoYOcYA9P-NbJcRZDYSA",
+        image: "/images/crypto-rat-boss.png",
         price: 0.42,
         collection: "Degen Rug-Rats",
         marketplace: "LaunchMyNFT",
         marketplaceUrl: "https://launchmynft.io/sol/15827",
         floorPrice: 0.42,
+        isOneOfOne: true,
       },
     ]
 

@@ -2,25 +2,20 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import WalletConnect from "@/components/wallet-connect"
-import TipJar from "@/components/tip-jar"
-import Link from "next/link"
 
 // Constants for external links
 const PUMPFUN_URL = "https://pump.fun/coin/G7o5yXGyQPxUbPPJC6Apme7p5M1YqVoapQ2YbUsWpump"
 const TOKEN_CONTRACT = "G7o5yXGyQPxUbPPJC6Apme7p5M1YqVoapQ2YbUsWpump"
 const BUY_TOKEN_URL = `https://jup.ag/swap/SOL-${TOKEN_CONTRACT}`
-const DEV_ADDRESS = "Aq6YoBjyDow9SajNHRsk6u4Yx1EirxgufB4SQSyDjLww"
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("token")
-  const [walletAddress, setWalletAddress] = useState<string | null>(null)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -66,10 +61,6 @@ const Header = () => {
     }
   }
 
-  const handleWalletConnected = (address: string) => {
-    setWalletAddress(address)
-  }
-
   return (
     <header
       className={cn(
@@ -112,30 +103,19 @@ const Header = () => {
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
-          <TipJar recipientAddress={DEV_ADDRESS} variant="secondary" />
-          <WalletConnect variant="default" showBalance={true} onWalletConnected={handleWalletConnected} />
+        <div className="hidden md:block">
           <Button
             className="bg-rat-primary hover:bg-rat-primary/90 text-white"
             onClick={() => window.open(BUY_TOKEN_URL, "_blank")}
           >
             Buy $DEGEN
           </Button>
-          <Link
-            href="/mint"
-            className={cn(buttonVariants({ variant: "outline" }), "border-rat-neon text-rat-neon hover:bg-rat-neon/10")}
-          >
-            Mint NFT
-          </Link>
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="flex items-center gap-2 md:hidden">
-          <WalletConnect variant="outline" className="mr-2" />
-          <button className="text-white" onClick={toggleMenu} aria-label="Toggle menu">
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+        <button className="md:hidden text-white" onClick={toggleMenu} aria-label="Toggle menu">
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
       {/* Mobile Navigation */}
@@ -159,24 +139,12 @@ const Header = () => {
               </a>
             ))}
 
-            <div className="flex flex-col gap-3 mt-2">
-              <TipJar recipientAddress={DEV_ADDRESS} className="w-full" />
-              <Button
-                className="bg-rat-primary hover:bg-rat-primary/90 text-white w-full"
-                onClick={() => window.open(BUY_TOKEN_URL, "_blank")}
-              >
-                Buy $DEGEN
-              </Button>
-              <Link
-                href="/mint"
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "border-rat-neon text-rat-neon hover:bg-rat-neon/10 w-full",
-                )}
-              >
-                Mint NFT
-              </Link>
-            </div>
+            <Button
+              className="bg-rat-primary hover:bg-rat-primary/90 text-white mt-2"
+              onClick={() => window.open(BUY_TOKEN_URL, "_blank")}
+            >
+              Buy $DEGEN
+            </Button>
           </div>
         </div>
       )}

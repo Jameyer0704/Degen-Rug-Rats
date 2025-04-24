@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { ChatProvider } from "@/contexts/chat-context"
-import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const orbitron = Orbitron({
@@ -36,7 +35,6 @@ export default function RootLayout({
               <main className="flex-grow">{children}</main>
               <Footer />
             </div>
-            <Toaster />
           </ChatProvider>
         </ThemeProvider>
       </body>
