@@ -527,9 +527,9 @@ export default function Home() {
                       desc: "Coordinated buying event to pump the token. Bring your SOL and your degen energy.",
                     },
                     {
-                      title: "Rat Pack Meetup",
+                      title: "Sniper Bot V1 Release",
                       date: "May 20, 2025",
-                      desc: "IRL meetup for the most degen rats. Share strategies and celebrate our gains.",
+                      desc: "Unveiling our newest AI Solana Trading Bot. Get early access to automated trading strategies and market insights.",
                     },
                   ].map((event, i) => (
                     <Card key={i} className="sewer-card border-gray-800">
