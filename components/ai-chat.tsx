@@ -122,7 +122,18 @@ const AIChat = ({
   // Scroll to bottom of chat when new messages are added
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+      const container = chatContainerRef.current
+      // Check if user is already at the bottom or close to it (within 100px)
+      const isAtBottom = container.scrollHeight - container.clientHeight - container.scrollTop < 100
+
+      // If at bottom or it's a new message from the AI, scroll to bottom
+      if (isAtBottom || chatHistory[chatHistory.length - 1]?.role === "assistant") {
+        // Use smooth scrolling for better UX
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: "smooth",
+        })
+      }
     }
   }, [chatHistory])
 
@@ -155,24 +166,41 @@ const AIChat = ({
   const generateResponse = (userInput: string) => {
     const input = userInput.toLowerCase()
 
+    // Helper function to ensure responses aren't too long
+    const formatResponse = (response: string) => {
+      // Ensure response isn't too long (max ~300 chars)
+      if (response.length > 300) {
+        return response.substring(0, 300) + "..."
+      }
+      return response
+    }
+
     // Price or token value questions
     if (input.includes("price") || input.includes("worth") || input.includes("value") || input.includes("chart")) {
-      return `${getRandomCatchphrase()} The ${projectKnowledge.token.name} token is currently trading at ${projectKnowledge.token.price.current} with a ${projectKnowledge.token.price.change24h} change in the last 24 hours. Our all-time high is ${projectKnowledge.token.price.ath}! Market cap is sitting at ${projectKnowledge.token.marketCap} with ${projectKnowledge.token.liquidity} in liquidity. Volume in the last 24 hours is ${projectKnowledge.token.volume24h}. The chart's looking bullish AF right now - perfect time to load your bags!`
+      return formatResponse(
+        `${getRandomCatchphrase()} The ${projectKnowledge.token.name} token is currently trading at ${projectKnowledge.token.price.current} with a ${projectKnowledge.token.price.change24h} change in the last 24 hours. Our all-time high is ${projectKnowledge.token.price.ath}! Market cap is sitting at ${projectKnowledge.token.marketCap} with ${projectKnowledge.token.liquidity} in liquidity. Volume in the last 24 hours is ${projectKnowledge.token.volume24h}. The chart's looking bullish AF right now - perfect time to load your bags!`,
+      )
     }
 
     // How to buy questions
     if (input.includes("buy") || input.includes("get") || input.includes("purchase")) {
-      return `Ready to join the rat pack? You can buy ${projectKnowledge.token.name} on Jupiter Exchange (${projectKnowledge.token.buyLinks.jupiter}) or PumpFun (${projectKnowledge.token.buyLinks.pumpfun}). Just connect your Solana wallet, swap some SOL for ${projectKnowledge.token.name}, and you're in! Contract address is ${projectKnowledge.token.contract} - always double-check it! Need help with the swap? Hit us up in the Discord and a mod will guide you through it.`
+      return formatResponse(
+        `Ready to join the rat pack? You can buy ${projectKnowledge.token.name} on Jupiter Exchange (${projectKnowledge.token.buyLinks.jupiter}) or PumpFun (${projectKnowledge.token.buyLinks.pumpfun}). Just connect your Solana wallet, swap some SOL for ${projectKnowledge.token.name}, and you're in! Contract address is ${projectKnowledge.token.contract} - always double-check it! Need help with the swap? Hit us up in the Discord and a mod will guide you through it.`,
+      )
     }
 
     // NFT questions
     if (input.includes("nft") || input.includes("mint") || input.includes("collection")) {
-      return `Our NFT collection is FIRE! We've got ${projectKnowledge.nft.total} total Degen Rug-Rats - ${projectKnowledge.nft.standard} standard editions and ${projectKnowledge.nft.special} super rare 1:1 special editions. Mint price is just ${projectKnowledge.nft.mintPrice} - absolute steal! Minting is ${projectKnowledge.nft.mintStatus}! Each NFT gets you ${projectKnowledge.nft.benefits.join(", ")}. You can find them on ${projectKnowledge.nft.marketplaces.join(", ")}. These rats are gonna MOON! 🐀💎`
+      return formatResponse(
+        `Our NFT collection is FIRE! We've got ${projectKnowledge.nft.total} total Degen Rug-Rats - ${projectKnowledge.nft.standard} standard editions and ${projectKnowledge.nft.special} super rare 1:1 special editions. Mint price is just ${projectKnowledge.nft.mintPrice} - absolute steal! Minting is ${projectKnowledge.nft.mintStatus}! Each NFT gets you ${projectKnowledge.nft.benefits.join(", ")}. You can find them on ${projectKnowledge.nft.marketplaces.join(", ")}. These rats are gonna MOON! 🐀💎`,
+      )
     }
 
     // Audit or security questions
     if (input.includes("audit") || input.includes("safe") || input.includes("security") || input.includes("rug")) {
-      return `Security first, rat fam! ${projectKnowledge.token.audit} We take security seriously - despite our name, we're not here to rug anyone! The liquidity is locked, and the team tokens are vested with a transparent schedule. Always DYOR, but we've made sure this project is as safe as a rat in its burrow!`
+      return formatResponse(
+        `Security first, rat fam! ${projectKnowledge.token.audit} We take security seriously - despite our name, we're not here to rug anyone! The liquidity is locked, and the team tokens are vested with a transparent schedule. Always DYOR, but we've made sure this project is as safe as a rat in its burrow!`,
+      )
     }
 
     // Community questions
@@ -183,17 +211,23 @@ const AIChat = ({
       input.includes("twitter") ||
       input.includes("join")
     ) {
-      return `The Degen Rug-Rats community is the most savage crew in the sewers! Join our Discord at ${projectKnowledge.community.discord} or follow us on Twitter at ${projectKnowledge.community.twitter}. We've got ${projectKnowledge.community.members.discord} rats in Discord and ${projectKnowledge.community.members.twitter} following us on Twitter. We're growing fast! We've got upcoming events like ${projectKnowledge.community.events[0].name} on ${projectKnowledge.community.events[0].date} and ${projectKnowledge.community.events[1].name} on ${projectKnowledge.community.events[1].date}. Don't miss out on the alpha!`
+      return formatResponse(
+        `The Degen Rug-Rats community is the most savage crew in the sewers! Join our Discord at ${projectKnowledge.community.discord} or follow us on Twitter at ${projectKnowledge.community.twitter}. We've got ${projectKnowledge.community.members.discord} rats in Discord and ${projectKnowledge.community.members.twitter} following us on Twitter. We're growing fast! We've got upcoming events like ${projectKnowledge.community.events[0].name} on ${projectKnowledge.community.events[0].date} and ${projectKnowledge.community.events[1].name} on ${projectKnowledge.community.events[1].date}. Don't miss out on the alpha!`,
+      )
     }
 
     // Roadmap questions
     if (input.includes("roadmap") || input.includes("future") || input.includes("plan") || input.includes("coming")) {
-      return `Our roadmap is stacked, rat fam! We've already completed ${projectKnowledge.roadmap.completed.join(", ")}. Right now we're focused on ${projectKnowledge.roadmap.current.join(", ")}. Coming up next is ${projectKnowledge.roadmap.upcoming.slice(0, 3).join(", ")}, and long-term we're looking at ${projectKnowledge.roadmap.upcoming.slice(3).join(", ")}. The future's bright for us rats! 💰🔮`
+      return formatResponse(
+        `Our roadmap is stacked, rat fam! We've already completed ${projectKnowledge.roadmap.completed.join(", ")}. Right now we're focused on ${projectKnowledge.roadmap.current.join(", ")}. Coming up next is ${projectKnowledge.roadmap.upcoming.slice(0, 3).join(", ")}, and long-term we're looking at ${projectKnowledge.roadmap.upcoming.slice(3).join(", ")}. The future's bright for us rats! 💰🔮`,
+      )
     }
 
     // Team questions
     if (input.includes("team") || input.includes("founder") || input.includes("dev") || input.includes("who")) {
-      return `The Degen Rug-Rats team is a group of crypto OGs who've been through multiple market cycles. They prefer to stay anon (smart in this space, ya know?), but they're super active in the Discord. The lead dev has worked on several successful Solana projects before, and our marketing rat has serious connections in the space. Come chat with them directly in our Discord - they're always dropping alpha!`
+      return formatResponse(
+        `The Degen Rug-Rats team is a group of crypto OGs who've been through multiple market cycles. They prefer to stay anon (smart in this space, ya know?), but they're super active in the Discord. The lead dev has worked on several successful Solana projects before, and our marketing rat has serious connections in the space. Come chat with them directly in our Discord - they're always dropping alpha!`,
+      )
     }
 
     // Tokenomics questions
@@ -203,7 +237,9 @@ const AIChat = ({
       input.includes("distribution") ||
       input.includes("allocation")
     ) {
-      return `Here's the cheese on our tokenomics: Total supply is ${projectKnowledge.token.totalSupply} ${projectKnowledge.token.name}. 40% for liquidity (locked for 6 months), 20% for marketing (vested over 12 months), 15% for development (vested over 18 months), 15% for community rewards and airdrops, and 10% for the team (vested over 24 months). No presale, no VCs, just a fair launch for all the rats in the sewer!`
+      return formatResponse(
+        `Here's the cheese on our tokenomics: Total supply is ${projectKnowledge.token.totalSupply} ${projectKnowledge.token.name}. 40% for liquidity (locked for 6 months), 20% for marketing (vested over 12 months), 15% for development (vested over 18 months), 15% for community rewards and airdrops, and 10% for the team (vested over 24 months). No presale, no VCs, just a fair launch for all the rats in the sewer!`,
+      )
     }
 
     // Greeting or general questions
@@ -214,11 +250,15 @@ const AIChat = ({
       input.includes("sup") ||
       input.includes("yo")
     ) {
-      return `Yo, what's good rat gang! ${getRandomCatchphrase()} How can I help you navigate the sewers today? Want some alpha on our token, NFTs, or community?`
+      return formatResponse(
+        `Yo, what's good rat gang! ${getRandomCatchphrase()} How can I help you navigate the sewers today? Want some alpha on our token, NFTs, or community?`,
+      )
     }
 
     // Default response for other questions
-    return `Thanks for asking about "${userInput.substring(0, 30)}${userInput.length > 30 ? "..." : ""}". ${getRandomCatchphrase()} The Degen Rug-Rats project combines a Solana token with an NFT collection, creating a community of crypto enthusiasts. Our token ${projectKnowledge.token.name} is on Solana with a total supply of ${projectKnowledge.token.totalSupply}. We're currently minting our NFT collection with ${projectKnowledge.nft.standard} standard and ${projectKnowledge.nft.special} special editions. Anything specific about our token, NFTs, or community you'd like to know more about? I'm your rat, just ask!`
+    return formatResponse(
+      `Thanks for asking about "${userInput.substring(0, 30)}${userInput.length > 30 ? "..." : ""}". ${getRandomCatchphrase()} The Degen Rug-Rats project combines a Solana token with an NFT collection, creating a community of crypto enthusiasts. Our token ${projectKnowledge.token.name} is on Solana with a total supply of ${projectKnowledge.token.totalSupply}. We're currently minting our NFT collection with ${projectKnowledge.nft.standard} standard and ${projectKnowledge.nft.special} special editions. Anything specific about our token, NFTs, or community you'd like to know more about? I'm your rat, just ask!`,
+    )
   }
 
   const handleSendMessage = async () => {
@@ -307,12 +347,12 @@ const AIChat = ({
 
       <div
         ref={chatContainerRef}
-        className={`flex-1 overflow-y-auto p-3 space-y-3 bg-gray-900 ${isWidget ? "h-80" : ""}`}
+        className={`flex-1 overflow-y-auto p-3 space-y-3 bg-gray-900 ${isWidget ? "h-80" : ""} scrollbar-custom`}
       >
         {chatHistory.map((msg) => (
           <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
-              className={`max-w-[80%] rounded-lg p-3 ${
+              className={`max-w-[80%] rounded-lg p-3 break-words overflow-hidden ${
                 msg.role === "user" ? "bg-rat-primary/20 text-white" : "bg-gray-800 text-gray-200"
               }`}
             >
@@ -322,7 +362,7 @@ const AIChat = ({
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="max-w-[80%] rounded-lg p-3 bg-gray-800 text-gray-200">
+            <div className="max-w-[80%] rounded-lg p-3 break-words overflow-hidden bg-gray-800 text-gray-200">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-rat-primary rounded-full animate-pulse"></div>
                 <div className="w-2 h-2 bg-rat-primary rounded-full animate-pulse delay-150"></div>
