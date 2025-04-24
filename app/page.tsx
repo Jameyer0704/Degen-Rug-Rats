@@ -7,12 +7,23 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MessageSquare, Users, Calendar, Bot, Sparkles, ExternalLink, DiscIcon as Discord, Twitter } from "lucide-react"
+import {
+  MessageSquare,
+  Users,
+  Calendar,
+  Bot,
+  Sparkles,
+  ExternalLink,
+  DiscIcon as Discord,
+  Twitter,
+  TrendingUp,
+} from "lucide-react"
 import AIChat from "@/components/ai-chat"
 import { getTokenData } from "@/lib/token-service"
 import { formatCurrency } from "@/lib/utils"
 import { getNFTs } from "@/lib/nft-service"
 import { Badge } from "@/components/ui/badge"
+import MintButton from "@/components/mint-button"
 
 // Token contract address
 const TOKEN_CONTRACT = "G7o5yXGyQPxUbPPJC6Apme7p5M1YqVoapQ2YbUsWpump"
@@ -25,6 +36,22 @@ const SEWER_BG_IMAGE = "/images/sewer-bg.png"
 const SEWER_TUNNEL_IMAGE = "/images/sewer-tunnel.jpg"
 const DEGEN_LOGO_IMAGE = "/images/degen-logo.png"
 const RAT_KING_IMAGE = "/images/evil-rat-king.png"
+
+function PumpFunTracker() {
+  return (
+    <Card className="border-gray-800 bg-gray-900/50">
+      <CardContent className="p-6">
+        <h3 className="font-orbitron font-bold mb-4">PumpFun Chart</h3>
+        <iframe
+          src={`https://pump.fun/embed/${TOKEN_CONTRACT}`}
+          width="100%"
+          height="400px"
+          style={{ border: "none" }}
+        ></iframe>
+      </CardContent>
+    </Card>
+  )
+}
 
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false)
@@ -301,12 +328,7 @@ export default function Home() {
           </div>
 
           <div className="mt-8 text-center">
-            <Button
-              className="bg-rat-primary hover:bg-rat-primary/90 text-white"
-              onClick={() => window.open("https://launchmynft.io/sol/15827", "_blank")}
-            >
-              Mint Your Degen Rug-Rat
-            </Button>
+            <MintButton className="mt-6" />
           </div>
         </div>
       </section>
@@ -346,6 +368,13 @@ export default function Home() {
                 >
                   <Users className="mr-2 h-4 w-4" />
                   Social
+                </TabsTrigger>
+                <TabsTrigger
+                  value="market"
+                  className="data-[state=active]:bg-rat-primary data-[state=active]:text-white"
+                >
+                  <TrendingUp className="mr-2 h-4 w-4" />
+                  Market
                 </TabsTrigger>
                 <TabsTrigger
                   value="events"
@@ -505,6 +534,42 @@ export default function Home() {
                     </div>
                   </CardContent>
                 </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="market">
+              <div className="space-y-6">
+                <p className="text-gray-400 text-center max-w-2xl mx-auto">
+                  Track real-time market activity for $DEGEN token on PumpFun and other exchanges.
+                </p>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <PumpFunTracker />
+
+                  <Card className="border-gray-800 bg-gray-900/50">
+                    <CardContent className="p-6">
+                      <h3 className="font-orbitron font-bold mb-4">Market Stats</h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">24h Volume</span>
+                          <span className="font-bold">$15,420</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Market Cap</span>
+                          <span className="font-bold">$38,000</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Liquidity</span>
+                          <span className="font-bold">$25,000</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Holders</span>
+                          <span className="font-bold">24</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
             </TabsContent>
 

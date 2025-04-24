@@ -4,10 +4,11 @@ import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MessageSquare, Users, Calendar, DiscIcon as Discord, Twitter } from "lucide-react"
+import { MessageSquare, Users, Calendar, DiscIcon as Discord, Twitter, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import AIChat from "@/components/ai-chat"
+import PumpFunTracker from "@/components/pumpfun-tracker"
 import { cancelAllChatRequests } from "@/lib/ai-service"
 
 // New token contract address
@@ -45,6 +46,46 @@ const CommunitySection = () => {
 
           <div className="bg-gray-900 rounded-lg overflow-hidden border border-gray-800">
             <AIChat isWidget={true} />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "market",
+      icon: <TrendingUp className="h-5 w-5" />,
+      title: "Market",
+      content: (
+        <div className="space-y-4">
+          <p className="text-gray-400">
+            Track real-time market activity for $DEGEN token on PumpFun and other exchanges.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <PumpFunTracker />
+
+            <Card className="border-gray-800 bg-gray-900/50">
+              <CardContent className="p-6">
+                <h3 className="font-orbitron font-bold mb-4">Market Stats</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">24h Volume</span>
+                    <span className="font-bold">$15,420</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Market Cap</span>
+                    <span className="font-bold">$38,000</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Liquidity</span>
+                    <span className="font-bold">$25,000</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Holders</span>
+                    <span className="font-bold">24</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       ),
