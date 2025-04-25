@@ -19,7 +19,7 @@ interface ChatContextType {
 const initialMessage: ChatMessage = {
   role: "assistant",
   content:
-    "Yo, what's up rat gang! SewerKing here, your guide to all things Degen Rug-Rats. Wanna know about our token, NFT collection, or how to join the community? Just ask and I'll hook you up with that sweet alpha!",
+    "Yo, what's up rat gang! 🐀 SewerKing here, your guide to all things Degen Rug-Rats. Ready to drop some SERIOUS alpha on our token, NFT collection, and upcoming events! What can I help you with today? Looking for price action? NFT utilities? Or just wanna hear a rat joke? I got you covered! 💰🔥",
   id: "initial",
   timestamp: Date.now(),
 }
@@ -56,7 +56,13 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   }
 
   const resetChat = () => {
-    setChatHistory([initialMessage])
+    setChatHistory([
+      {
+        ...initialMessage,
+        timestamp: Date.now(),
+        id: `initial-${Date.now()}`,
+      },
+    ])
   }
 
   return <ChatContext.Provider value={{ chatHistory, addMessage, resetChat }}>{children}</ChatContext.Provider>
